@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Roles - {{ config.APP_NAME }}{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Roles</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Manage user roles and their permissions</p>
+        </div>
+        {% if current_user.has_permission('create roles') %}
+        <a href="{{ url_for('roles.create') }}" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg">Add Role</a>
+        {% endif %}
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Permissions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Users</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for role in roles %}
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td class="px-6 py-4"><span class="font-medium">{{ role.name }}</span></td>
+                    <td class="px-6 py-4">{{ role.permissions.count() }} permissions</td>
+                    <td class="px-6 py-4">{{ role.users.count() }} users</td>
+                    <td class="px-6 py-4 text-right">
+                        {% if current_user.has_permission('edit roles') %}
+                        <a href="{{ url_for('roles.edit', id=role.id) }}" class="text-primary-600 hover:text-primary-900">Edit</a>
+                        {% endif %}
+                        {% if current_user.has_permission('delete roles') %}
+                        <form method="POST" action="{{ url_for('roles.delete', id=role.id) }}" class="inline ml-3" onsubmit="return confirm('Delete this role?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

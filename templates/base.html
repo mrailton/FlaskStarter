@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ config.APP_NAME }}{% endblock %}</title>
+
+    <!-- Tailwind CSS 4 -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js 3 -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    {% if current_user.is_authenticated %}
+        {% include 'partials/navbar.html' %}
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Flash Messages -->
+    <div x-data="{ messages: [] }"
+         x-init="
+            {% if get_flashed_messages(with_categories=true) %}
+                messages = [
+                    {% for category, message in get_flashed_messages(with_categories=true) %}
+                        { category: '{{ category }}', message: '{{ message }}' },
+                    {% endfor %}
+                ];
+                messages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        messages.splice(index, 1);
+                    }, 5000);
+                });
+            {% endif %}
+         "
+         class="fixed top-4 right-4 z-50 space-y-2">
+        <template x-for="(msg, index) in messages" :key="index">
+            <div x-show="true"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-x-8"
+                 x-transition:enter-end="opacity-100 transform translate-x-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="px-6 py-4 rounded-lg shadow-lg max-w-sm"
+                 :class="{
+                     'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100': msg.category === 'success',
+                     'bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100': msg.category === 'error',
+                     'bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100': msg.category === 'info',
+                     'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100': msg.category === 'warning'
+                 }">
+                <div class="flex items-center justify-between">
+                    <p x-text="msg.message" class="font-medium"></p>
+                    <button @click="messages.splice(index, 1)" class="ml-4 text-current hover:opacity-75">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

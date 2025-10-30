@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if user %}Edit User{% else %}Create User{% endif %} - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            {% if user %}Edit User{% else %}Create New User{% endif %}
+        </h1>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <form method="POST" class="space-y-6">
+            {{ form.hidden_tag() }}
+
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium mb-2">Name</label>
+                {{ form.name(class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white") }}
+                {% if form.name.errors %}
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.name.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium mb-2">Email</label>
+                {{ form.email(class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white") }}
+                {% if form.email.errors %}
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.email.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium mb-2">
+                    Password {% if user %}<span class="text-gray-500 text-xs">(leave blank to keep current)</span>{% endif %}
+                </label>
+                {{ form.password(class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white") }}
+                {% if form.password.errors %}
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.password.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Roles -->
+            <div>
+                <label class="block text-sm font-medium mb-2">Roles</label>
+                <div class="space-y-2 max-h-48 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                    {% for role_id, role_name in form.roles.choices %}
+                        <div class="flex items-center">
+                            <input type="checkbox"
+                                   name="roles"
+                                   value="{{ role_id }}"
+                                   {% if role_id in form.roles.data %}checked{% endif %}
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                            <label class="ml-2 block text-sm">{{ role_name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.roles.errors %}
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ form.roles.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-4">
+                <a href="{{ url_for('users.index') }}"
+                   class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg">
+                    Cancel
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    {% if user %}Update User{% else %}Create User{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

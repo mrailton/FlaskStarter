@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pytest:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv pip install:*)",
+      "Bash(./manage.py test:*)",
+      "Bash(uv run python:*)",
+      "Bash(python manage.py test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
