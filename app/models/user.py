@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
                           onupdate=lambda: datetime.now(UTC))
 
     # Relationships
-    roles = db.relationship('Role', secondary='model_has_roles',
+    roles = db.relationship('Role', secondary='user_has_roles',
                           back_populates='users', lazy='dynamic')
 
     def set_password(self, password):

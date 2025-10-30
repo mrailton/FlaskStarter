@@ -33,10 +33,9 @@ class Permission(db.Model):
 
 
 # Association table for model (User) has roles (many-to-many)
-model_has_roles = db.Table('model_has_roles',
+user_has_roles = db.Table('user_has_roles',
     db.Column('role_id', db.Integer, db.ForeignKey('roles.id', ondelete='CASCADE'), primary_key=True),
-    db.Column('model_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
-    db.Column('model_type', db.String(255), nullable=False, default='User')
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True),
 )
 
 # Association table for role has permissions (many-to-many)

@@ -15,7 +15,7 @@ class Role(db.Model):
                           onupdate=lambda: datetime.now(UTC))
 
     # Relationships
-    users = db.relationship('User', secondary='model_has_roles',
+    users = db.relationship('User', secondary='user_has_roles',
                           back_populates='roles', lazy='dynamic')
     permissions = db.relationship('Permission', secondary='role_has_permissions',
                                 back_populates='roles', lazy='dynamic')
