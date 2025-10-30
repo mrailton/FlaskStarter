@@ -51,7 +51,8 @@ class TestingConfig(Config):
     DATABASE_NAME = os.getenv('TEST_DATABASE_NAME', 'flaskstarter_test')
     SQLALCHEMY_DATABASE_URI = (
         f"mysql+pymysql://{Config.DATABASE_USER}:{Config.DATABASE_PASSWORD}@"
-        f"{Config.DATABASE_HOST}:{Config.DATABASE_PORT}/{DATABASE_NAME}?charset=utf8mb4"
+        f"{Config.DATABASE_HOST}:{Config.DATABASE_PORT}/"
+        f"{os.getenv('TEST_DATABASE_NAME', 'flaskstarter_test')}?charset=utf8mb4"
     )
 
 

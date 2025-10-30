@@ -193,5 +193,63 @@ def downgrade():
     sys.exit(result.returncode)
 
 
+@cli.command()
+@click.option('-n', '--workers', default=None, help='Number of parallel workers (e.g., 2, 4, auto). Default: run sequentially')
+@click.option('-v', '--verbose', count=True, help='Increase verbosity')
+@click.option('-k', '--keyword', default='', help='Only run tests matching keyword expression')
+@click.option('--no-cov', is_flag=True, help='Disable coverage reporting')
+@click.option('--failfast', is_flag=True, help='Stop on first test failure')
+@click.argument('path', required=False, default='tests')
+def test(workers, verbose, keyword, no_cov, failfast, path):
+    """Run the test suite with pytest.
+
+    Examples:
+        python manage.py test                    # Run all tests sequentially
+        python manage.py test -n auto           # Run tests in parallel (auto-detect workers)
+        python manage.py test -n 4              # Run tests with 4 parallel workers
+        python manage.py test -k test_user      # Run only tests matching 'test_user'
+        python manage.py test --no-cov          # Run without coverage report
+    """
+    import subprocess
+    import sys
+
+    click.echo('Running test suite...')
+
+    # Build pytest command
+    cmd = [sys.executable, '-m', 'pytest', path]
+
+    # Add parallel execution if specified
+    if workers:
+        cmd.extend(['-n', workers])
+
+    # Add verbosity
+    if verbose:
+        cmd.append('-' + 'v' * verbose)
+
+    # Add keyword filter
+    if keyword:
+        cmd.extend(['-k', keyword])
+
+    # Add coverage options (unless disabled)
+    if not no_cov:
+        cmd.extend(['--cov=app', '--cov-report=html', '--cov-report=term-missing'])
+
+    # Add failfast option
+    if failfast:
+        cmd.append('-x')
+
+    click.echo(f'Running: {" ".join(cmd)}')
+    result = subprocess.run(cmd)
+
+    if result.returncode == 0:
+        click.echo(click.style('\nAll tests passed!', fg='green'))
+        if not no_cov:
+            click.echo('Coverage report: htmlcov/index.html')
+    else:
+        click.echo(click.style('\nSome tests failed!', fg='red'))
+
+    sys.exit(result.returncode)
+
+
 if __name__ == '__main__':
     cli()
