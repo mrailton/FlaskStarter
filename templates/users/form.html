@@ -52,7 +52,7 @@
                             <input type="checkbox"
                                    name="roles"
                                    value="{{ role_id }}"
-                                   {% if role_id in form.roles.data %}checked{% endif %}
+                                   {% if form.roles.data and role_id in form.roles.data %}checked{% endif %}
                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
                             <label class="ml-2 block text-sm">{{ role_name }}</label>
                         </div>

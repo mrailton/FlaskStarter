@@ -16,7 +16,7 @@
                 <div class="space-y-2 max-h-64 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
                     {% for perm_id, perm_name in form.permissions.choices %}
                     <div class="flex items-center">
-                        <input type="checkbox" name="permissions" value="{{ perm_id }}" {% if perm_id in form.permissions.data %}checked{% endif %} class="h-4 w-4 text-primary-600 rounded">
+                        <input type="checkbox" name="permissions" value="{{ perm_id }}" {% if form.permissions.data and perm_id in form.permissions.data %}checked{% endif %} class="h-4 w-4 text-primary-600 rounded">
                         <label class="ml-2 text-sm">{{ perm_name }}</label>
                     </div>
                     {% endfor %}
