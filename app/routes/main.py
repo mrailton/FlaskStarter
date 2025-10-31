@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify
 from flask_login import login_required, current_user
 from app.models import User, Role, Permission
 
@@ -30,3 +30,12 @@ def dashboard():
         'total_permissions': Permission.query.count(),
     }
     return render_template('dashboard.html', stats=stats)
+
+
+@bp.route('/health')
+def health():
+    """Health check endpoint for container orchestration."""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'flaskstarter'
+    }), 200
