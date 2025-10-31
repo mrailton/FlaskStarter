@@ -51,11 +51,15 @@ def test_dashboard_authenticated_access(authenticated_client):
 
 def test_dashboard_shows_user_count(authenticated_client, db):
     """Test that dashboard shows correct user count."""
-    # Create additional users
-    for i in range(3):
-        user = User(name=f'User {i}', email=f'user{i}@example.com')
-        user.set_password('password')
-        db.session.add(user)
+    # Create additional users efficiently
+    import bcrypt
+    hashed_pw = bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt(4)).decode('utf-8')
+    
+    users = [
+        User(name=f'User {i}', email=f'user{i}@example.com', password=hashed_pw)
+        for i in range(3)
+    ]
+    db.session.bulk_save_objects(users)
     db.session.commit()
 
     response = authenticated_client.get('/dashboard')

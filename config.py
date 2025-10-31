@@ -46,6 +46,9 @@ class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
     WTF_CSRF_ENABLED = False
+    
+    # Fast bcrypt for testing (4 rounds instead of default 12)
+    BCRYPT_LOG_ROUNDS = 4
 
     # Use test database
     DATABASE_NAME = os.getenv('TEST_DATABASE_NAME', 'flaskstarter_test')

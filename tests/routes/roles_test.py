@@ -36,10 +36,9 @@ def test_roles_search(admin_client, db, role_user, role_editor):
 
 def test_roles_pagination(admin_client, db):
     """Test roles pagination."""
-    # Create multiple roles
-    for i in range(15):
-        role = Role(name=f'Role {i}')
-        db.session.add(role)
+    # Create multiple roles efficiently
+    roles = [Role(name=f'Role {i}') for i in range(12)]
+    db.session.bulk_save_objects(roles)
     db.session.commit()
 
     response = admin_client.get('/roles/?page=1&per_page=10')
@@ -310,10 +309,9 @@ def test_api_search(admin_client, db, role_user):
 
 def test_api_pagination(admin_client, db):
     """Test API pagination."""
-    # Create multiple roles
-    for i in range(15):
-        role = Role(name=f'API Role {i}')
-        db.session.add(role)
+    # Create multiple roles efficiently
+    roles = [Role(name=f'API Role {i}') for i in range(12)]
+    db.session.bulk_save_objects(roles)
     db.session.commit()
 
     response = admin_client.get('/roles/api?page=1&per_page=10')

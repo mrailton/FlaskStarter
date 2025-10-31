@@ -46,11 +46,15 @@ def test_users_search(admin_client, db):
 
 def test_users_pagination(admin_client, db):
     """Test users pagination."""
-    # Create multiple users
-    for i in range(15):
-        user = User(name=f'User {i}', email=f'user{i}@test.com')
-        user.set_password('password')
-        db.session.add(user)
+    # Create users efficiently with pre-hashed password
+    import bcrypt
+    hashed_pw = bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt(4)).decode('utf-8')
+    
+    users = [
+        User(name=f'User {i}', email=f'user{i}@test.com', password=hashed_pw)
+        for i in range(12)  # Reduced from 15, still tests pagination
+    ]
+    db.session.bulk_save_objects(users)
     db.session.commit()
 
     response = admin_client.get('/users/?page=1&per_page=10')
@@ -345,11 +349,15 @@ def test_api_search(admin_client, db, regular_user):
 
 def test_api_pagination(admin_client, db):
     """Test API pagination."""
-    # Create multiple users
-    for i in range(15):
-        user = User(name=f'API User {i}', email=f'apiuser{i}@test.com')
-        user.set_password('password')
-        db.session.add(user)
+    # Create users efficiently with pre-hashed password
+    import bcrypt
+    hashed_pw = bcrypt.hashpw('password'.encode('utf-8'), bcrypt.gensalt(4)).decode('utf-8')
+    
+    users = [
+        User(name=f'API User {i}', email=f'apiuser{i}@test.com', password=hashed_pw)
+        for i in range(12)  # Reduced from 15, still tests pagination
+    ]
+    db.session.bulk_save_objects(users)
     db.session.commit()
 
     response = admin_client.get('/users/api?page=1&per_page=10')

@@ -36,10 +36,9 @@ def test_permissions_search(admin_client, db, permission_view_users):
 
 def test_permissions_pagination(admin_client, db):
     """Test permissions pagination."""
-    # Create multiple permissions
-    for i in range(15):
-        perm = Permission(name=f'permission {i}')
-        db.session.add(perm)
+    # Create multiple permissions efficiently
+    permissions = [Permission(name=f'permission {i}') for i in range(12)]
+    db.session.bulk_save_objects(permissions)
     db.session.commit()
 
     response = admin_client.get('/permissions/?page=1&per_page=10')
@@ -301,10 +300,9 @@ def test_api_search(admin_client, db, permission_view_users):
 
 def test_api_pagination(admin_client, db):
     """Test API pagination."""
-    # Create multiple permissions
-    for i in range(15):
-        perm = Permission(name=f'api permission {i}')
-        db.session.add(perm)
+    # Create multiple permissions efficiently
+    permissions = [Permission(name=f'api permission {i}') for i in range(12)]
+    db.session.bulk_save_objects(permissions)
     db.session.commit()
 
     response = admin_client.get('/permissions/api?page=1&per_page=10')

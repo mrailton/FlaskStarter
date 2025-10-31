@@ -23,7 +23,10 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         """Hash and set the user's password."""
-        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        from flask import current_app
+        # Use configured bcrypt rounds (fast in testing, secure in production)
+        rounds = current_app.config.get('BCRYPT_LOG_ROUNDS', 12)
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(rounds)).decode('utf-8')
 
     def check_password(self, password):
         """Check if the provided password matches the stored hash."""
