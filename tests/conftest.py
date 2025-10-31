@@ -24,12 +24,49 @@ def pytest_configure(config):
 def app():
     """Create application for testing session."""
     from app import create_app, db as _db
+    from flask import Blueprint
+    from app.middleware import role_required, permission_required, all_permissions_required, all_roles_required
 
     # Get the database name set by pytest_configure
     test_db_name = os.environ.get('TEST_DATABASE_NAME', 'flaskstarter_test')
 
     # Create app with testing config
     app = create_app('testing')
+    
+    # Register test blueprint for middleware decorator tests before first request
+    test_bp = Blueprint('test_middleware', __name__)
+    
+    @test_bp.route('/test_permission_required')
+    @permission_required('view users')
+    def permission_view_route():
+        return 'success'
+    
+    @test_bp.route('/test_role_required')
+    @role_required('Admin')
+    def role_view_route():
+        return 'success'
+    
+    @test_bp.route('/test_all_permissions')
+    @all_permissions_required('view users', 'edit users')
+    def all_perms_view_route():
+        return 'success'
+    
+    @test_bp.route('/test_all_roles')
+    @all_roles_required('Admin', 'User')
+    def all_roles_view_route():
+        return 'success'
+    
+    @test_bp.route('/test_multiple_permissions')
+    @permission_required('view users', 'edit users')
+    def multiple_perms_view_route():
+        return 'success'
+    
+    @test_bp.route('/test_multiple_roles')
+    @role_required('Admin', 'Editor')
+    def multiple_roles_view_route():
+        return 'success'
+    
+    app.register_blueprint(test_bp)
 
     # Ensure we're using the correct test database
     assert test_db_name in app.config['SQLALCHEMY_DATABASE_URI'], \
