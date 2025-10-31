@@ -159,9 +159,9 @@ class TestRoleUsers:
         db.session.commit()
 
         # User should still exist
-        assert User.query.get(user.id) is not None
+        assert db.session.get(User, user.id) is not None
         # But role should be gone
-        assert Role.query.get(role_id) is None
+        assert db.session.get(Role, role_id) is None
         # And user should have no roles
         assert user.roles.count() == 0
 
@@ -178,8 +178,8 @@ class TestRolePermissionCascade:
         db.session.commit()
 
         # Role should still exist
-        assert Role.query.get(role_user.id) is not None
+        assert db.session.get(Role, role_user.id) is not None
         # But permission should be gone
-        assert Permission.query.get(permission_id) is None
+        assert db.session.get(Permission, permission_id) is None
         # And role should not have that permission
         assert role_user.has_permission('view users') is False

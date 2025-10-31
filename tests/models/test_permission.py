@@ -104,9 +104,9 @@ class TestPermissionCascade:
         db.session.commit()
 
         # Permission should still exist
-        assert Permission.query.get(permission_view_users.id) is not None
+        assert db.session.get(Permission, permission_view_users.id) is not None
         # Role should be gone
-        assert Role.query.get(role_id) is None
+        assert db.session.get(Role, role_id) is None
         # Permission should have one less role
         assert permission_view_users.roles.count() == initial_role_count - 1
 
