@@ -54,7 +54,7 @@ jobs:
             sleep 2
           done
       
-      - name: Run tests
+      - name: Run tests with Make
         env:
           DATABASE_HOST: 127.0.0.1
           DATABASE_PORT: 3306
@@ -64,7 +64,7 @@ jobs:
           SECRET_KEY: test-secret-key-for-ci
         run: |
           source .venv/bin/activate
-          python manage.py test -n auto
+          make test
       
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
@@ -114,7 +114,10 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
       
-      - name: Build and push Docker image
+      # Note: Using docker/build-push-action for optimized multi-platform builds
+      # For local builds, use: make build-multi-push IMAGE_NAME=ghcr.io/user/repo
+      - name: Build and push multi-platform Docker image
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .

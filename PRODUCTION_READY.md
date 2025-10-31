@@ -14,11 +14,14 @@ Your FlaskStarter project is now fully configured for production deployment with
 ## 📦 What Was Created
 
 ### Docker & Deployment Files
-- `Dockerfile` - Multi-stage production build
+- `Dockerfile` - Multi-stage production build (amd64 + arm64)
 - `docker-compose.yml` - Local development/testing
 - `.dockerignore` - Exclude unnecessary files
+- `Makefile` - Build automation commands
+- `docker-build-multiplatform.sh` - Multi-platform build script
 - `DEPLOYMENT.md` - Complete deployment guide
 - `DOCKER_BUILD.md` - Technical build documentation
+- `MULTI_PLATFORM_DOCKER.md` - Multi-architecture guide
 
 ### Frontend Build System
 - `package.json` - Node dependencies & build scripts

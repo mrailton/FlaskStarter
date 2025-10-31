@@ -4,11 +4,33 @@
 
 ### Building the Image Locally
 
+**Single Platform (current architecture):**
 ```bash
 # Build the image
 docker build -t flaskstarter:latest .
 
-# Run the container
+# Or use Make
+make build
+```
+
+**Multi-Platform (x86_64 + arm64):**
+```bash
+# Using buildx (recommended)
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --tag flaskstarter:latest \
+  --load \
+  .
+
+# Or use the provided script
+./docker-build-multiplatform.sh
+
+# Or use Make
+make build-multi
+```
+
+**Run the container:**
+```bash
 docker run -d \
   -p 8000:8000 \
   -e DATABASE_HOST=your-db-host \
@@ -18,6 +40,9 @@ docker run -d \
   -e SECRET_KEY=your-secret-key \
   --name flaskstarter \
   flaskstarter:latest
+
+# Or use Make
+make run
 ```
 
 ### Using Docker Compose
@@ -119,6 +144,14 @@ The CI/CD pipeline automatically:
    - `v1.0.0` - Semantic version tags
 
 ## Image Details
+
+### Multi-Platform Support
+
+✅ **The Docker image supports both architectures:**
+- **linux/amd64** (x86_64) - Intel/AMD processors
+- **linux/arm64** - Apple Silicon, AWS Graviton, ARM servers
+
+See [MULTI_PLATFORM_DOCKER.md](MULTI_PLATFORM_DOCKER.md) for detailed instructions.
 
 ### Image Size Optimization
 
