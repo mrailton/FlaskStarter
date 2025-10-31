@@ -8,11 +8,11 @@ WORKDIR /build
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies
+# Install dependencies (including devDependencies for build tools)
 RUN npm ci
 
 # Copy source files needed for build
-COPY static ./static
+COPY static/src ./static/src
 COPY templates ./templates
 COPY tailwind.config.js ./
 

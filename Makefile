@@ -81,6 +81,7 @@ shell: ## Open shell in running container
 
 npm-build: ## Build frontend assets
 	@echo "📦 Building frontend assets..."
+	@mkdir -p static/dist/css static/dist/js
 	npm run build
 
 inspect: ## Inspect Docker image
