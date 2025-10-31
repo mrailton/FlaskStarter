@@ -59,10 +59,7 @@ instance/
 # Frontend build
 node_modules/
 static/dist/
-package-lock.json
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Docker
 .dockerignore
