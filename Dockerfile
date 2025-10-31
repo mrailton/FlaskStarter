@@ -67,6 +67,7 @@ COPY --from=python-builder /opt/venv /opt/venv
 COPY --chown=flaskapp:flaskapp app ./app
 COPY --chown=flaskapp:flaskapp templates ./templates
 COPY --chown=flaskapp:flaskapp config.py manage.py ./
+COPY --chown=flaskapp:flaskapp migrations ./migrations
 
 # Copy built frontend assets from frontend builder
 COPY --from=frontend-builder --chown=flaskapp:flaskapp /build/static/dist ./static/dist
