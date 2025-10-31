@@ -40,22 +40,13 @@ else
 fi
 
 # Ask if user wants to initialize database
-read -p "🗄️  Do you want to create database migrations? (y/n) " -n 1 -r
+read -p "🗄️  Do you want to run database migrations? (y/n) " -n 1 -r
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Creating initial migration..."
-    uv run flask --app app db migrate -m "Initial migration"
-    echo "✅ Migration created"
+    echo "Applying migrations..."
+    uv run flask --app app db upgrade
+    echo "✅ Migrations applied"
     echo ""
-
-    read -p "🗄️  Apply migrations now? (y/n) " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "Applying migrations..."
-        uv run flask --app app db upgrade
-        echo "✅ Migrations applied"
-        echo ""
-    fi
 fi
 
 # Ask if user wants to seed data
@@ -78,8 +69,7 @@ echo ""
 echo "✅ Setup complete!"
 echo ""
 echo "Next steps:"
-echo "1. Edit .env with your database credentials"
-echo "2. Run: uv run python manage.py runserver"
-echo "3. Visit: http://localhost:5000"
+echo "1. Run: uv run manage.py runserver"
+echo "2. Visit: http://localhost:5000"
 echo ""
 echo "For more information, see README.md"
